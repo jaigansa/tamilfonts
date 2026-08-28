@@ -55,12 +55,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function initLucide() {
-    if (window.lucide) {
-      window.lucide.createIcons();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (err) {
+        console.warn('Lucide icon initialization note:', err);
+      }
     }
   }
 
   function showToast(message) {
+    if (!toast || !toastMsg) return;
     toastMsg.textContent = message;
     toast.classList.add('show');
     setTimeout(() => {
@@ -69,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function applyFilters() {
-    searchQuery = searchInput.value.toLowerCase().trim();
+    searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
     filteredFonts = fontsData.filter(f => {
       const matchCat = (activeCategory === 'all') || (f.category === activeCategory);
@@ -88,20 +93,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateStatus() {
-    fontCountMsg.innerHTML = `<i data-lucide="font" class="status-icon"></i> Showing ${filteredFonts.length.toLocaleString()} of ${fontsData.length.toLocaleString()} fonts`;
+    if (fontCountMsg) {
+      fontCountMsg.innerHTML = `<i data-lucide="file-text" class="status-icon"></i> Showing ${filteredFonts.length.toLocaleString()} of ${fontsData.length.toLocaleString()} fonts`;
+    }
     
     let catText = activeCategory === 'all' ? 'All Encodings' : activeCategory;
     let styleText = activeStyle === 'all' ? 'All Styles' : activeStyle;
-    if (searchQuery) {
-      activeFilterMsg.innerHTML = `<i data-lucide="filter" class="status-icon"></i> Search: "${escapeHtml(searchQuery)}" • ${catText} • ${styleText}`;
-    } else {
-      activeFilterMsg.innerHTML = `<i data-lucide="filter" class="status-icon"></i> Filter: ${catText} • ${styleText}`;
+
+    if (activeFilterMsg) {
+      if (searchQuery) {
+        activeFilterMsg.innerHTML = `<i data-lucide="filter" class="status-icon"></i> Search: "${escapeHtml(searchQuery)}" • ${catText} • ${styleText}`;
+      } else {
+        activeFilterMsg.innerHTML = `<i data-lucide="filter" class="status-icon"></i> Filter: ${catText} • ${styleText}`;
+      }
     }
 
-    if (currentPage * pageSize >= filteredFonts.length) {
-      loadMoreBtn.style.display = 'none';
-    } else {
-      loadMoreBtn.style.display = 'inline-flex';
+    if (loadMoreBtn) {
+      if (currentPage * pageSize >= filteredFonts.length) {
+        loadMoreBtn.style.display = 'none';
+      } else {
+        loadMoreBtn.style.display = 'inline-flex';
+      }
     }
   }
 
@@ -123,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderCards(reset = false) {
+    if (!fontsGrid) return;
     if (reset) {
       fontsGrid.innerHTML = '';
     }
@@ -139,14 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
       card.innerHTML = `
         <div class="card-header">
           <div class="font-meta">
-            <span class="font-name" title="${font.filename}">${escapeHtml(font.name)}</span>
-            <span class="font-submeta">${font.category} • ${font.size}</span>
+            <span class="font-name" title="${escapeHtml(font.filename)}">${escapeHtml(font.name)}</span>
+            <span class="font-submeta">${escapeHtml(font.category)} • ${escapeHtml(font.size)}</span>
           </div>
           <div class="badge-group">
             <span class="badge" style="background:${font.license_color}">
-              <i data-lucide="shield"></i> ${font.license_badge}
+              <i data-lucide="shield"></i> ${escapeHtml(font.license_badge)}
             </span>
-            <span class="badge badge-style">${font.style}</span>
+            <span class="badge badge-style">${escapeHtml(font.style)}</span>
           </div>
         </div>
 
@@ -155,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div class="card-footer">
-          <span class="lic-name" title="${font.license}">${font.license_badge}</span>
+          <span class="lic-name" title="${escapeHtml(font.license)}">${escapeHtml(font.license_badge)}</span>
           <div class="btn-group">
             <a href="${encodeURI(font.path)}" download class="action-btn download-btn">
               <i data-lucide="download"></i> Download Font
@@ -179,74 +192,93 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function escapeHtml(text) {
+    if (!text) return '';
     const div = document.createElement('div');
     div.innerText = text;
     return div.innerHTML;
   }
 
   // Dropdown Listeners
-  categorySelect.addEventListener('change', () => {
-    activeCategory = categorySelect.value;
-    quickSelect.value = 'all|all';
-    applyFilters();
-  });
+  if (categorySelect) {
+    categorySelect.addEventListener('change', () => {
+      activeCategory = categorySelect.value;
+      if (quickSelect) quickSelect.value = 'all|all';
+      applyFilters();
+    });
+  }
 
-  styleSelect.addEventListener('change', () => {
-    activeStyle = styleSelect.value;
-    quickSelect.value = 'all|all';
-    applyFilters();
-  });
+  if (styleSelect) {
+    styleSelect.addEventListener('change', () => {
+      activeStyle = styleSelect.value;
+      if (quickSelect) quickSelect.value = 'all|all';
+      applyFilters();
+    });
+  }
 
-  quickSelect.addEventListener('change', () => {
-    const [cat, st] = quickSelect.value.split('|');
-    activeCategory = cat || 'all';
-    activeStyle = st || 'all';
-    categorySelect.value = activeCategory;
-    styleSelect.value = activeStyle;
-    applyFilters();
-  });
+  if (quickSelect) {
+    quickSelect.addEventListener('change', () => {
+      const [cat, st] = quickSelect.value.split('|');
+      activeCategory = cat || 'all';
+      activeStyle = st || 'all';
+      if (categorySelect) categorySelect.value = activeCategory;
+      if (styleSelect) styleSelect.value = activeStyle;
+      applyFilters();
+    });
+  }
 
-  resetFiltersBtn.addEventListener('click', () => {
-    activeCategory = 'all';
-    activeStyle = 'all';
-    searchQuery = '';
-    searchInput.value = '';
-    clearSearchBtn.style.display = 'none';
-    categorySelect.value = 'all';
-    styleSelect.value = 'all';
-    quickSelect.value = 'all|all';
-    applyFilters();
-    showToast('Filters reset to default');
-  });
+  if (resetFiltersBtn) {
+    resetFiltersBtn.addEventListener('click', () => {
+      activeCategory = 'all';
+      activeStyle = 'all';
+      searchQuery = '';
+      if (searchInput) searchInput.value = '';
+      if (clearSearchBtn) clearSearchBtn.style.display = 'none';
+      if (categorySelect) categorySelect.value = 'all';
+      if (styleSelect) styleSelect.value = 'all';
+      if (quickSelect) quickSelect.value = 'all|all';
+      applyFilters();
+      showToast('Filters reset to default');
+    });
+  }
 
   // Search & Input Listeners
-  searchInput.addEventListener('input', () => {
-    clearSearchBtn.style.display = searchInput.value ? 'flex' : 'none';
-    applyFilters();
-  });
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      if (clearSearchBtn) clearSearchBtn.style.display = searchInput.value ? 'flex' : 'none';
+      applyFilters();
+    });
+  }
 
-  clearSearchBtn.addEventListener('click', () => {
-    searchInput.value = '';
-    clearSearchBtn.style.display = 'none';
-    applyFilters();
-  });
+  if (clearSearchBtn) {
+    clearSearchBtn.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      clearSearchBtn.style.display = 'none';
+      applyFilters();
+    });
+  }
 
-  customTextInput.addEventListener('input', () => {
-    previewText = customTextInput.value;
-    updatePreviews();
-  });
+  if (customTextInput) {
+    customTextInput.addEventListener('input', () => {
+      previewText = customTextInput.value;
+      updatePreviews();
+    });
+  }
 
-  presetTextSelect.addEventListener('change', () => {
-    customTextInput.value = presetTextSelect.value;
-    previewText = presetTextSelect.value;
-    updatePreviews();
-  });
+  if (presetTextSelect) {
+    presetTextSelect.addEventListener('change', () => {
+      if (customTextInput) customTextInput.value = presetTextSelect.value;
+      previewText = presetTextSelect.value;
+      updatePreviews();
+    });
+  }
 
-  fontSizeSlider.addEventListener('input', () => {
-    fontSize = fontSizeSlider.value;
-    fontSizeVal.textContent = `${fontSize}px`;
-    updatePreviews();
-  });
+  if (fontSizeSlider) {
+    fontSizeSlider.addEventListener('input', () => {
+      fontSize = fontSizeSlider.value;
+      if (fontSizeVal) fontSizeVal.textContent = `${fontSize}px`;
+      updatePreviews();
+    });
+  }
 
   function updatePreviews() {
     document.querySelectorAll('.font-preview').forEach(prev => {
@@ -256,42 +288,57 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // View Toggle
-  gridBtn.addEventListener('click', () => {
-    gridBtn.classList.add('active-view-btn');
-    listBtn.classList.remove('active-view-btn');
-    fontsGrid.classList.remove('list-view');
-  });
+  if (gridBtn && listBtn && fontsGrid) {
+    gridBtn.addEventListener('click', () => {
+      gridBtn.classList.add('active-view-btn');
+      listBtn.classList.remove('active-view-btn');
+      fontsGrid.classList.remove('list-view');
+    });
 
-  listBtn.addEventListener('click', () => {
-    listBtn.classList.add('active-view-btn');
-    gridBtn.classList.remove('active-view-btn');
-    fontsGrid.classList.add('list-view');
-  });
+    listBtn.addEventListener('click', () => {
+      listBtn.classList.add('active-view-btn');
+      gridBtn.classList.remove('active-view-btn');
+      fontsGrid.classList.add('list-view');
+    });
+  }
 
   // Theme Toggle
-  themeToggle.addEventListener('click', () => {
-    document.documentElement.classList.toggle('dark');
-    document.documentElement.classList.toggle('light');
-    initLucide();
-  });
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      document.documentElement.classList.toggle('light');
+      initLucide();
+    });
+  }
 
   // Load More
-  loadMoreBtn.addEventListener('click', () => {
-    currentPage++;
-    updateStatus();
-    renderCards(false);
-  });
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', () => {
+      currentPage++;
+      updateStatus();
+      renderCards(false);
+    });
+  }
 
   // Modals
-  ccInfoBtn.onclick = () => {
-    licenseModal.classList.add('active');
-    initLucide();
-  };
+  if (ccInfoBtn && licenseModal) {
+    ccInfoBtn.onclick = () => {
+      licenseModal.classList.add('active');
+      initLucide();
+    };
+  }
 
-  closeModal.onclick = () => licenseModal.classList.remove('active');
-  modalOkBtn.onclick = () => licenseModal.classList.remove('active');
+  if (closeModal && licenseModal) {
+    closeModal.onclick = () => licenseModal.classList.remove('active');
+  }
+
+  if (modalOkBtn && licenseModal) {
+    modalOkBtn.onclick = () => licenseModal.classList.remove('active');
+  }
 
   window.onclick = (e) => {
-    if (e.target === licenseModal) licenseModal.classList.remove('active');
+    if (licenseModal && e.target === licenseModal) {
+      licenseModal.classList.remove('active');
+    }
   };
 });
