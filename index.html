@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ta" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>தமிழ் எழுத்துருக்கள் | Tamil Fonts Hub (Lucide UI Edition)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="lucide.min.js"></script>
+</head>
+<body>
+  <!-- Header Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-logo-wrap">
+          <i data-lucide="type" class="logo-icon"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Tamil Fonts Hub</span>
+          <span class="brand-subtitle"><i data-lucide="sparkles" class="sub-icon"></i> 7,030+ Encodings & Styles Archive</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="themeToggle" class="icon-btn" title="Toggle Light/Dark Theme">
+          <i data-lucide="sun" class="sun-icon"></i>
+          <i data-lucide="moon" class="moon-icon"></i>
+        </button>
+        <button id="ccInfoBtn" class="nav-btn">
+          <i data-lucide="shield-check"></i>
+          CC Licensing Info
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky Controls Toolbar -->
+  <section class="toolbar-section">
+    <div class="toolbar-container">
+      <!-- Search Input -->
+      <div class="search-box">
+        <i data-lucide="search" class="search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search 7,030+ fonts by name, style, or encoding...">
+        <button id="clearSearch" class="clear-btn" title="Clear Search">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <!-- Preview Text Input -->
+      <div class="text-input-box">
+        <i data-lucide="text-cursor-input" class="input-icon"></i>
+        <input type="text" id="customTextInput" value="தமிழ் வாழ்க வளர்க!" placeholder="Type custom preview text...">
+        <select id="presetTextSelect">
+          <option value="தமிழ் வாழ்க வளர்க!">தமிழ் வாழ்க வளர்க!</option>
+          <option value="அகர முதல எழுத்தெல்லாம் ஆதி பகவன் முதற்றே உலகு.">திருக்குறள் (அகர முதல...)</option>
+          <option value="யாதும் ஊரே யாவரும் கேளிர்.">புறநானூறு (யாதும் ஊரே...)</option>
+          <option value="தமிழுக்கும் அமுதென்று பேர் - அந்தத் தமிழ்இன்பத் தமிழ்எங்கள் உயிருக்கு நேர்.">பாரதிதாசன் (தமிழுக்கும் அமுதென்று பேர்)</option>
+          <option value="செந்தமிழ் நாடெனும் போதினிலே - இன்பத் தேன்வந்து பாயுது காதினிலே.">பாரதியார் (செந்தமிழ் நாடெனும்...)</option>
+          <option value="The quick brown fox jumps over the lazy dog. 1234567890">English & Numbers (Sample)</option>
+        </select>
+      </div>
+
+      <!-- Size Slider & View Toggle -->
+      <div class="size-control-box">
+        <i data-lucide="sliders-horizontal" class="slider-icon"></i>
+        <span class="size-label" id="fontSizeVal">32px</span>
+        <input type="range" id="fontSizeSlider" min="16" max="72" value="32">
+        
+        <div class="view-toggle">
+          <button id="gridBtn" class="active-view-btn" title="Grid View">
+            <i data-lucide="layout-grid"></i>
+          </button>
+          <button id="listBtn" title="List View">
+            <i data-lucide="list"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ultra-Compact Filter Bar with Color-Coded Micro Icon Tiles -->
+    <div class="filters-container compact-filters">
+      <div class="compact-filter-bar">
+        <!-- Encoding Dropdown -->
+        <div class="filter-compact-item">
+          <span class="icon-tile icon-cyan"><i data-lucide="layers"></i></span>
+          <select id="categorySelect" class="compact-select">
+            <option value="all">All Encodings (7,032)</option>
+            <option value="ATM_Azhagi_Anjal">ATM / Azhagi / Anjal (4,242)</option>
+            <option value="Unicode">Unicode (1,038)</option>
+            <option value="TAB_TAM">TAB / TAM (350)</option>
+            <option value="TACE_TAU_Chemmozhi">TACE / TAU (210)</option>
+            <option value="Chenet">Chenet (149)</option>
+            <option value="Vanavil_NLCI">Vanavil / NLCI (87)</option>
+            <option value="Senthamizh_Sundaram">Senthamizh / Sundaram (57)</option>
+            <option value="Modular_SHREE_TMOT">Modular / SHREE (50)</option>
+            <option value="TSCII">TSCII (32)</option>
+            <option value="Bamini">Bamini (3)</option>
+            <option value="Other_Legacy">Other Legacy (814)</option>
+          </select>
+        </div>
+
+        <!-- Style Dropdown -->
+        <div class="filter-compact-item">
+          <span class="icon-tile icon-indigo"><i data-lucide="sparkles"></i></span>
+          <select id="styleSelect" class="compact-select">
+            <option value="all">All Styles (6)</option>
+            <option value="Regular">Regular (3,157)</option>
+            <option value="Italic">Italic (1,792)</option>
+            <option value="Bold">Bold (1,054)</option>
+            <option value="BoldItalic">BoldItalic (567)</option>
+            <option value="Medium_SemiBold">Medium / SemiBold (275)</option>
+            <option value="Light">Light (187)</option>
+          </select>
+        </div>
+
+        <!-- Quick Presets Dropdown List -->
+        <div class="filter-compact-item highlight-item">
+          <span class="icon-tile icon-amber"><i data-lucide="zap"></i></span>
+          <select id="quickSelect" class="compact-select">
+            <option value="all|all">⚡ Quick Presets: Show All</option>
+            <option value="Unicode|all">🌐 Quick: Unicode Fonts</option>
+            <option value="ATM_Azhagi_Anjal|all">✍️ Quick: ATM / Anjal / Azhagi</option>
+            <option value="TACE_TAU_Chemmozhi|all">📜 Quick: TAU / TACE Chemmozhi</option>
+            <option value="TAB_TAM|all">🏛️ Quick: TAB / TAM Regional</option>
+            <option value="Chenet|all">📰 Quick: Chenet DTP Fonts</option>
+            <option value="all|Bold">💪 Quick: Bold Fonts Only</option>
+            <option value="all|Italic">✒️ Quick: Italic Fonts Only</option>
+            <option value="all|BoldItalic">✨ Quick: BoldItalic Fonts</option>
+          </select>
+        </div>
+
+        <!-- Reset Button -->
+        <button id="resetFiltersBtn" class="reset-filter-btn" title="Reset All Filters">
+          <span class="icon-tile icon-rose"><i data-lucide="rotate-ccw"></i></span>
+          Reset Filters
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Grid -->
+  <main class="main-content">
+    <div class="status-bar">
+      <span id="fontCountMsg"><i data-lucide="font" class="status-icon"></i> Showing 7,032 fonts</span>
+      <span id="activeFilterMsg"><i data-lucide="filter" class="status-icon"></i> Filter: All Encodings • All Styles</span>
+    </div>
+
+    <div class="fonts-grid" id="fontsGrid">
+      <!-- Font Cards rendered dynamically by app.js -->
+    </div>
+
+    <!-- Pagination / Load More -->
+    <div class="pagination-container">
+      <button id="loadMoreBtn" class="primary-btn">
+        <i data-lucide="arrow-down-circle"></i> Load More Fonts
+      </button>
+    </div>
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="toast">
+    <i data-lucide="check-circle-2" class="toast-icon"></i>
+    <span id="toastMsg">Action completed</span>
+  </div>
+
+  <!-- Creative Commons & Licensing Modal -->
+  <div id="licenseModal" class="modal">
+    <div class="modal-content">
+      <button class="close-modal" id="closeModal" title="Close"><i data-lucide="x"></i></button>
+      <div class="modal-header">
+        <i data-lucide="scale" class="modal-title-icon"></i>
+        <h2>Creative Commons & Open Font Licensing</h2>
+      </div>
+      <p class="modal-intro">All fonts in this archive are published under Open Source, Creative Commons, or Free DTP License agreements.</p>
+      
+      <div class="license-grid">
+        <div class="lic-card">
+          <span class="lic-badge" style="background:#10b981;"><i data-lucide="award"></i> CC BY 4.0 / SIL OFL 1.1</span>
+          <h3>Unicode & Google Fonts</h3>
+          <p>Creative Commons Attribution 4.0 International & SIL Open Font License 1.1. Free for personal, commercial, web, and app development with attribution.</p>
+        </div>
+        
+        <div class="lic-card">
+          <span class="lic-badge" style="background:#3b82f6;"><i data-lucide="file-badge"></i> TVA Open License</span>
+          <h3>TACE / TAU / Chemmozhi Fonts</h3>
+          <p>Official standards developed by Tamil Virtual Academy & Government of Tamil Nadu for public education, government portals, and digital publishing.</p>
+        </div>
+
+        <div class="lic-card">
+          <span class="lic-badge" style="background:#8b5cf6;"><i data-lucide="share-2"></i> CC BY-SA 4.0</span>
+          <h3>TAB / TAM & TamilNet99 Standards</h3>
+          <p>Standardized Tamil Bilingual (TAB) & Monolingual (TAM) 8-bit regional encodings under Creative Commons ShareAlike 4.0.</p>
+        </div>
+
+        <div class="lic-card">
+          <span class="lic-badge" style="background:#f59e0b;"><i data-lucide="globe"></i> CC0 / Public Domain</span>
+          <h3>Bamini & Legacy Encodings</h3>
+          <p>Classic typewriter fonts (Bamini, Baamini) in the public domain, used extensively for Sri Lankan and international desktop publishing.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="primary-btn" id="modalOkBtn"><i data-lucide="check"></i> Understood</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <p><i data-lucide="heart" class="footer-heart"></i> © 2026 Tamil Fonts Hub • Open Access Tamil Typography Archive • Powered by Lucide UI & Creative Commons</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
